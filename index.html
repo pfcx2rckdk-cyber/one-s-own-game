@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>СВОЯ ИГРА · Информатика 6–7 класс · 4 раунда</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/unbounded@5.0.0/cyrillic-700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/unbounded@5.0.0/cyrillic-400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/rubik@5.0.0/cyrillic-400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/rubik@5.0.0/cyrillic-500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/rubik@5.0.0/cyrillic-700.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg-grid"></div><div class="bg-glow"></div><div class="bg-scan"></div>
+<canvas id="confetti"></canvas>
+
+<!-- ================= СТАРТ ================= -->
+<section class="screen active" id="screen-start">
+  <div class="start-wrap">
+    <div>
+      <div class="logo-badge"><span class="pulse-dot"></span> Информатика · 6–7 класс · 4 раунда</div>
+      <h1 class="title">СВОЯ<span class="l2">ИГРА</span></h1>
+      <p class="subtitle">Четыре раунда на отдельных страницах: классическое поле, блиц на время, «кот в мешке» с случайными событиями и финальный аукцион. Подсказки, баллы и новые факты на каждом шагу.</p>
+
+      <div class="setup">
+        <h3>Сколько команд играет?</h3>
+        <div class="chips" id="countChips">
+          <button class="chip" data-n="1">1</button><button class="chip on" data-n="2">2</button>
+          <button class="chip" data-n="3">3</button><button class="chip" data-n="4">4</button>
+        </div>
+        <h3>Названия команд</h3>
+        <div class="team-inputs" id="teamInputs"></div>
+        <div style="display:flex;gap:11px;flex-wrap:wrap">
+          <button class="btn primary big" id="startBtn">🚀 Начать игру</button>
+          <button class="btn ghost" data-nav="rules">📖 Правила</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <svg class="robot" viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="gBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b7bff"/><stop offset="1" stop-color="#3b2bb5"/></linearGradient>
+          <linearGradient id="gHead" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8ebff"/><stop offset="1" stop-color="#aab4e8"/></linearGradient>
+          <radialGradient id="gEye"><stop offset="0" stop-color="#8affea"/><stop offset="1" stop-color="#00b3c8"/></radialGradient>
+          <radialGradient id="gBuzz"><stop offset="0" stop-color="#ffd7de"/><stop offset=".55" stop-color="#ff4d6d"/><stop offset="1" stop-color="#8e0f2b"/></radialGradient>
+        </defs>
+        <ellipse cx="160" cy="280" rx="94" ry="15" fill="#000" opacity=".35"/>
+        <line x1="160" y1="46" x2="160" y2="20" stroke="#22d3ee" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="160" cy="16" r="9" fill="#22d3ee"><animate attributeName="r" values="8;12;8" dur="1.6s" repeatCount="indefinite"/></circle>
+        <rect x="88" y="46" width="144" height="104" rx="34" fill="url(#gHead)" stroke="#6c76b8" stroke-width="2"/>
+        <rect x="106" y="70" width="108" height="60" rx="22" fill="#0b1030"/>
+        <circle cx="140" cy="100" r="15" fill="url(#gEye)"><animate attributeName="cy" values="100;97;100" dur="3s" repeatCount="indefinite"/></circle>
+        <circle cx="180" cy="100" r="15" fill="url(#gEye)"><animate attributeName="cy" values="100;97;100" dur="3s" repeatCount="indefinite"/></circle>
+        <rect x="150" y="126" width="20" height="5" rx="2.5" fill="#3ddc84"/>
+        <rect x="72" y="82" width="18" height="34" rx="8" fill="#7c5cff"/><rect x="230" y="82" width="18" height="34" rx="8" fill="#7c5cff"/>
+        <rect x="104" y="152" width="112" height="96" rx="28" fill="url(#gBody)" stroke="#c3b9ff" stroke-width="2"/>
+        <rect x="124" y="172" width="72" height="42" rx="12" fill="#0b1030"/>
+        <text x="160" y="201" font-family="monospace" font-size="19" fill="#3ddc84" text-anchor="middle">0101</text>
+        <rect x="70" y="168" width="30" height="16" rx="8" fill="#a89bff"/><rect x="220" y="164" width="30" height="16" rx="8" fill="#a89bff"/>
+        <rect x="122" y="246" width="22" height="26" rx="9" fill="#a89bff"/><rect x="176" y="246" width="22" height="26" rx="9" fill="#a89bff"/>
+        <circle cx="254" cy="218" r="33" fill="#2a1140" opacity=".8"/>
+        <circle cx="254" cy="214" r="25" fill="url(#gBuzz)"><animate attributeName="r" values="24;27;24" dur="1.4s" repeatCount="indefinite"/></circle>
+        <circle cx="245" cy="205" r="7" fill="#fff" opacity=".55"/>
+        <g fill="#ffcf4d">
+          <circle cx="58" cy="58" r="3"><animate attributeName="opacity" values="0;1;0" dur="2.2s" repeatCount="indefinite"/></circle>
+          <circle cx="274" cy="66" r="3.5"><animate attributeName="opacity" values="1;0;1" dur="1.9s" repeatCount="indefinite"/></circle>
+          <circle cx="38" cy="176" r="2.6"><animate attributeName="opacity" values="0;1;0" dur="2.7s" repeatCount="indefinite"/></circle>
+        </g>
+      </svg>
+      <div class="round-preview">
+        <div class="rp" style="--c1:#22d3ee;--c2:#7c5cff"><div class="n">1</div><div class="tx"><b>Своя игра</b><span>6 тем × 5 вопросов · 100–500 баллов · классика</span></div></div>
+        <div class="rp" style="--c1:#3ddc84;--c2:#22d3ee"><div class="n">2</div><div class="tx"><b>Блиц</b><span>12 быстрых вопросов · по 15 секунд на каждый</span></div></div>
+        <div class="rp" style="--c1:#ffcf4d;--c2:#ff7a4d"><div class="n">3</div><div class="tx"><b>Кот в мешке</b><span>8 вопросов-сюрпризов · случайные события и бонусы</span></div></div>
+        <div class="rp" style="--c1:#ff5d7a;--c2:#7c5cff"><div class="n">4</div><div class="tx"><b>Финальный аукцион</b><span>ставки ва-банк · один вопрос решает всё</span></div></div>
+      </div>
+      <ul class="rules" style="margin-top:18px">
+        <li><span class="ic">💡</span><div>У каждой команды 3 подсказки на всю игру — используйте их в трудный момент.</div></li>
+        <li><span class="ic">🗺️</span><div>Каждый раунд — отдельная страница. Между раундами работает «карта игры».</div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= КАРТА РАУНДОВ ================= -->
+<section class="screen" id="screen-map">
+  <div class="topbar" data-tb="map"></div>
+  <div class="scoreboard"></div>
+  <div class="map-head">
+    <h2>Карта игры</h2>
+    <p>Выберите раунд. Каждый раунд открывается на своей странице.</p>
+  </div>
+  <div class="rounds" id="roundsGrid"></div>
+  <div class="standings">
+    <h3>Текущая таблица</h3>
+    <div id="standings"></div>
+  </div>
+  <div class="res-actions">
+    <button class="btn primary big" id="toResultsBtn">🏆 Перейти к итогам</button>
+  </div>
+</section>
+
+<!-- ================= РАУНД 1 ================= -->
+<section class="screen" id="screen-r1">
+  <div class="topbar" data-tb="1"></div>
+  <div class="scoreboard"></div>
+  <div class="board" id="board"></div>
+</section>
+
+<!-- ================= РАУНД 2 ================= -->
+<section class="screen" id="screen-r2">
+  <div class="topbar" data-tb="2"></div>
+  <div class="scoreboard"></div>
+  <div class="blitz-wrap">
+    <div class="blitz-head">
+      <div class="ring" id="blitzRing"><span id="blitzNum">15</span></div>
+      <div>
+        <div class="qtag">Блиц · вопрос <span id="blitzIdx">1</span> из 12 · 100 баллов</div>
+        <div class="dots" id="blitzDots"></div>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qbig" id="blitzQ"></div>
+      <div class="revealable" id="blitzA">
+        <div class="a-label">✔ Правильный ответ</div>
+        <div class="a-text" id="blitzAT"></div>
+        <div class="hintbox" id="blitzHintBox" style="display:none"><div class="fl">💡 Подсказка</div><div id="blitzHintT"></div></div>
+        <div class="fact"><div class="fl">💡 Знаете ли вы?</div><div id="blitzF"></div></div>
+      </div>
+      <div class="m-actions" style="padding:20px 0 0">
+        <div class="m-foot" id="blitzFoot1">
+          <button class="btn gold" id="blitzHintBtn">💡 Подсказка</button>
+          <button class="btn primary" id="blitzReveal">👁 Показать ответ</button>
+          <button class="btn ghost" id="blitzSkip">Пропустить ➜</button>
+        </div>
+        <div id="blitzFoot2" style="display:none">
+          <div class="score-row" id="blitzScoreRow"></div>
+          <div class="m-foot" style="margin-top:13px">
+            <button class="btn primary big" id="blitzNext">Следующий вопрос ➜</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= РАУНД 3 ================= -->
+<section class="screen" id="screen-r3">
+  <div class="topbar" data-tb="3"></div>
+  <div class="scoreboard"></div>
+  <div class="map-head" style="padding:6px 0 22px">
+    <h2 style="font-size:clamp(22px,3.6vw,34px)">🎁 Кот в мешке</h2>
+    <p>За каждым мешком — вопрос со случайной стоимостью и случайным событием: удвоение, приз, защита от штрафа или бонус всем.</p>
+  </div>
+  <div class="bags" id="bags"></div>
+</section>
+
+<!-- ================= РАУНД 4 ================= -->
+<section class="screen" id="screen-r4">
+  <div class="topbar" data-tb="4"></div>
+  <div class="scoreboard"></div>
+  <div class="auc">
+    <div class="auc-hero"><span class="em">🏆</span>
+      <h2 style="font-size:clamp(24px,4.4vw,42px);margin-top:6px">Финальный аукцион</h2>
+      <p style="color:var(--mut);margin-top:8px">Тема: «Всё обо всём». Сделайте ставки — один вопрос может изменить всё.</p>
+    </div>
+    <div id="aucBody"></div>
+    <div id="aucActions" style="margin-top:20px"></div>
+  </div>
+</section>
+
+<!-- ================= ИТОГИ ================= -->
+<section class="screen" id="screen-result">
+  <div class="result-hero">
+    <svg class="trophy" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".45" stop-color="#ffcf4d"/><stop offset="1" stop-color="#c8890a"/></linearGradient></defs>
+      <path d="M60 40h80v34a40 40 0 0 1-80 0z" fill="url(#gGold)"/>
+      <path d="M60 46H38c0 24 10 38 24 44z" fill="#e0a92a"/><path d="M140 46h22c0 24-10 38-24 44z" fill="#e0a92a"/>
+      <rect x="90" y="112" width="20" height="26" fill="#d99a1a"/><rect x="66" y="138" width="68" height="14" rx="6" fill="url(#gGold)"/>
+      <rect x="56" y="152" width="88" height="20" rx="8" fill="#8a5f06"/>
+      <path d="M100 56l6 13 14 2-10 10 3 14-13-7-13 7 3-14-10-10 14-2z" fill="#fff8dc" opacity=".9"/>
+    </svg>
+    <h2 id="resTitle">Игра окончена!</h2>
+    <p id="resSub"></p>
+  </div>
+  <div class="podium" id="podium"></div>
+  <div class="res-actions">
+    <button class="btn primary big" id="againBtn">🔁 Сыграть ещё раз</button>
+    <button class="btn ghost" data-nav="map">🗺️ Карта раундов</button>
+    <button class="btn ghost" id="homeBtn">🏠 На главный экран</button>
+  </div>
+</section>
+
+<!-- ================= МОДАЛКА ВОПРОСА ================= -->
+<div class="modal" id="qModal">
+  <div class="modal-card" id="qCard">
+    <div class="m-top">
+      <div class="m-cat"><em id="mIcon">🖥️</em><span id="mCat">Тема</span></div>
+      <div class="m-val" id="mVal">100</div>
+    </div>
+    <div class="timer" id="timerWrap"><i id="timerFill"></i></div>
+    <div class="m-body">
+      <div class="q-text" id="qText"></div>
+      <div class="hintbox" id="hintPanel" style="display:none"></div>
+      <div class="revealable" id="aPanel">
+        <div class="a-label">✔ Правильный ответ</div>
+        <div class="a-text" id="aText"></div>
+        <div id="evSlot"></div>
+        <div class="fact"><div class="fl">💡 Знаете ли вы?</div><div id="fText"></div></div>
+      </div>
+    </div>
+    <div class="m-actions">
+      <div class="m-foot" id="footReveal">
+        <button class="btn gold" id="hintBtn">💡 Подсказка</button>
+        <button class="btn primary big" id="revealBtn">👁 Показать ответ</button>
+        <div class="hintbar"><span><kbd>H</kbd> подсказка</span><span><kbd>Пробел</kbd> ответ</span><span><kbd>Esc</kbd> закрыть</span></div>
+      </div>
+      <div id="footScore" style="display:none">
+        <div class="score-row" id="scoreRow"></div>
+        <div class="m-foot" style="margin-top:13px">
+          <button class="btn primary" id="nextBtn">Дальше ➜</button>
+          <div class="hintbar">Начислите баллы команде, которая ответила верно (+), или снимите за ошибку (−).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ПРАВИЛА ================= -->
+<div class="modal" id="rulesModal">
+  <div class="modal-card" style="--h:190;max-width:760px">
+    <div class="m-top"><div class="m-cat"><em>📖</em><span>Правила игры</span></div><button class="icon-btn" data-nav="rulesClose">✕</button></div>
+    <div class="m-body" style="padding-bottom:22px">
+      <div class="fact" style="margin-top:0"><div class="fl">🗺️ Четыре раунда = четыре страницы</div>
+      <div>После каждого раунда вы возвращаетесь на «Карту игры», где видно таблицу и следующий раунд. Раунды идут по порядку: Своя игра → Блиц → Кот в мешке → Аукцион.</div></div>
+      <div class="fact"><div class="fl">🎯 Раунд 1 · Своя игра</div>
+      <div>6 тем по 5 вопросов (100–500 баллов). Выбираете клетку, обсуждаете, ведущий жмёт «Показать ответ» и начисляет баллы.</div></div>
+      <div class="fact"><div class="fl">⚡ Раунд 2 · Блиц</div>
+      <div>12 коротких вопросов, на каждый 15 секунд. Верно = +100, ошибка = −50. Вопрос можно пропустить без потерь.</div></div>
+      <div class="fact"><div class="fl">🎁 Раунд 3 · Кот в мешке</div>
+      <div>Стоимость и событие скрыты до открытия. События: «×2» — удвоение, «🎁 Приз» — +200 сверху, «🛡 Щит» — ошибка не штрафуется, «🤝 Командный бонус» — все команды получают по +100 при верном ответе.</div></div>
+      <div class="fact"><div class="fl">🏆 Раунд 4 · Аукцион</div>
+      <div>Команды ставят баллы из накопленных. Верный ответ прибавляет ставку, неверный — вычитает. Есть кнопка «Ва-банк».</div></div>
+      <div class="fact"><div class="fl">💡 Подсказки</div>
+      <div>У каждой команды 3 подсказки на всю игру (видны в карточке как 💡3). Подсказка тратит жетон активной команды и открывает намёк, а вторая ступень — первую букву и длину ответа.</div></div>
+      <div class="fact"><div class="fl">👆 Управление</div>
+      <div>Клик по карточке команды делает её активной. Кнопки −50/+50 рядом с очками — ручная корректировка ведущим. ↺ возвращает последний закрытый вопрос, 🔊 выключает звук.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= СПЛЭШ / КОНЕЦ РАУНДА ================= -->
+<div class="overlay" id="splash"><div class="splash-in" id="splashIn"></div></div>
+<div class="overlay" id="roundDone"><div class="rc-done-card" id="rdCard"></div></div>
+<div id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
